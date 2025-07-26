@@ -1,15 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import { Movie } from "../../../typings";
 import { useEffect, useState } from "react";
 import { baseUrl } from "../../../constants/movie";
+import { Movie } from "../../../typings";
+import { FaPlay } from "react-icons/fa";
+import { InformationCircleIcon } from "@heroicons/react/24/solid";
 
 interface Props {
-  netflixOriginals?: Movie[];
+  netflixOriginals: Movie[];
 }
 
-export default function Banner({ netflixOriginals }: Props) {
+function Banner({ netflixOriginals }: Props) {
   const [movie, setMovie] = useState<Movie | null>(null);
 
   useEffect(() => {
@@ -50,18 +52,27 @@ export default function Banner({ netflixOriginals }: Props) {
         className="object-cover"
         priority
       />
-      {/* Gradient overlay that matches the page background */}
-      <div className="absolute top-0 left-0 right-0 bottom-0 bg-gradient-to-t from-[#010511] via-transparent to-transparent" />
+
+      {/* Gradient from full opacity to transparent - matching page background */}
+      <div className="absolute top-0 left-0 right-0 bottom-0 bg-gradient-to-t from-[#010511] to-transparent" />
       <div className="absolute bottom-0 left-0 p-8 text-white">
         <h1 className="text-4xl font-bold mb-4">
           {movie?.title || movie?.name}
         </h1>
-        <p className="text-lg max-w-md mb-4">{movie?.overview}</p>
-      <div>
-        <button className="bannerButton">Play</button>
-        <button className="bannerButton">More Info</button>
-      </div>
+        <p className="text-lg max-w-md mb-4 text-shadow-md">{movie?.overview}</p>
+
+        <div className="flex space-x-3">
+          <button className="bannerButton bg-white text-black">
+            <FaPlay className="h-4 w-4 text-black" />
+            Play
+          </button>
+          <button className="bannerButton bg-[gray]/40">
+            More Info <InformationCircleIcon className="h-5 w-5" />
+          </button>
+        </div>
       </div>
     </div>
   );
 }
+
+export default Banner;

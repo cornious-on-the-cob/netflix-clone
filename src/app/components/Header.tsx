@@ -10,6 +10,8 @@ export default function Header() {
     const handleScroll = () => {
       if (window.scrollY > 0) {
         setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
       }
     };
     window.addEventListener("scroll", handleScroll);
@@ -20,7 +22,7 @@ export default function Header() {
   }, []);
 
   return (
-    <header className={`${isScrolled && "bg-[#141414]"}`}>
+    <header className={`transition-all duration-300 ${isScrolled ? "bg-[#010511]" : "bg-transparent"}`}>
       <div className="flex items-center space-x-2 md:space-x-10">
         <img
           src="https://rb.gy/ulxxee"
