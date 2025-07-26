@@ -1,9 +1,11 @@
 @import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @layer base {
   body {
-    @apply bg-[#141414]
-        text-white;
+    @apply bg-[#141414] text-white;
   }
 
   header {
@@ -28,5 +30,20 @@
     text-[#e5e5e5] 
     transition duration-[.4s] 
     hover:text-[#b3b3b3];
+  }
+}
+
+@layer utilities {
+  .animate-spin-smooth {
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
   }
 }
