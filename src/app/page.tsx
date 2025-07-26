@@ -1,4 +1,5 @@
 import Header from "./components/Header";
+import Head from "next/head";
 import Banner from "./components/Banner";
 import requests from "../../utils/requests";
 import { Movie } from "../../typings";
@@ -73,11 +74,16 @@ export default async function Home() {
     bg-[#010511]
     lg:h-[140vh]"
     >
+      <Head>
+        <title>Home - Netflix-Clone</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
       <Header />
       <main>
         <Banner netflixOriginals={data.netflixOriginals} />
         <section className="md:space-y-24">
-         <Row title="Trending Now" movies={data.trendingNow} />
+          <Row title="Trending Now" movies={data.trendingNow} />
           <Row title="Top Rated" movies={data.topRated} />
           <Row title="Action Thrillers" movies={data.actionMovies} />
           {/* My List Component */}
