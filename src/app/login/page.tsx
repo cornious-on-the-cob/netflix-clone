@@ -4,6 +4,7 @@ import Head from "next/head";
 import Image from "next/image";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import useAuth from "../../../hooks/useAuth";
 
 interface Inputs {
   email: string;
@@ -11,20 +12,21 @@ interface Inputs {
 }
 
 export default function Login() {
-  const [login, setLogin] = useState(false);
+  const { signIn, signUp } = useAuth();
 
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<Inputs>();
 
-  const onSubmit: SubmitHandler<Inputs> = async ({email, password}) => {
-    if (login) {
-      await signIn(email, password)
+  const onSubmit: SubmitHandler<Inputs> = async (data, event) => {
+    const submitter = (event?.nativeEvent as SubmitEvent)?.submitter as HTMLButtonElement | undefined;
+    const action = submitter?.value;
+    if (action === "login") {
+      await signIn(data.email, data.password);
     } else {
-      await signUp(email, password)
+      await signUp(data.email, data.password);
     }
   };
 
@@ -85,11 +87,10 @@ export default function Login() {
         <div className="space-y-4">
           <label className="inline-block w-full">
             <input
-              {...register("email")}
+              {...register("email", { required: true })}
               type="email"
               placeholder="Email"
               className="input"
-              {...register("email", { required: true })}
             />
 
             {errors.email && (
@@ -100,11 +101,10 @@ export default function Login() {
           </label>
           <label className="inline-block w-full">
             <input
-              {...register("password")}
+              {...register("password", { required: true })}
               type="password"
               placeholder="Password"
               className="input"
-              {...register("password", { required: true })}
             />
 
             {errors.password && (
@@ -122,8 +122,9 @@ export default function Login() {
       font-semibold
       cursor-pointer
       "
-          onClick={() => setLogin(true)}
           type="submit"
+          name="action"
+          value="login"
         >
           Sign In
         </button>
@@ -135,8 +136,9 @@ export default function Login() {
           hover:underline
           cursor-pointer
         "
-            onClick={() => setLogin(false)}
-            type="button"
+            type="submit"
+            name="action"
+            value="signup"
           >
             Sign Up Now
           </button>
