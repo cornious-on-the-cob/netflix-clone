@@ -1,3 +1,5 @@
+"use client";
+
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
@@ -6,17 +8,9 @@ import {
   User,
 } from "firebase/auth";
 
-import { useRouter } from "next/router";
-import {
-  Children,
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useRouter } from "next/navigation";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { auth } from "../firebase";
-import { error } from "console";
 
 interface IAuth {
   user: User | null;
@@ -44,9 +38,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState(null);
-  const [initialLoading, setInitialLoading] = useState(false)
+  const [initialLoading, setInitialLoading] = useState(true);
   const router = useRouter();
 
+  // Persisting the user
   useEffect(
     () =>
       onAuthStateChanged(auth, (user) => {
@@ -106,19 +101,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const memoedValue = useMemo(
     () => ({
       user,
-      signIn,
       signUp,
+      signIn,
+      loading,
       logout,
       error,
-      loading,
     }),
-    [user, loading, error]
+    [user, loading]
   );
 
   return (
     <AuthContext.Provider value={memoedValue}>
-        {!initialLoading && children}
-        </AuthContext.Provider>
+      {!initialLoading && children}
+    </AuthContext.Provider>
   );
 };
 

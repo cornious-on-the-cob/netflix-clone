@@ -2,16 +2,17 @@
 
 import Head from "next/head";
 import Image from "next/image";
-import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import useAuth from "../../../hooks/useAuth";
+import { useState } from "react";
 
 interface Inputs {
   email: string;
   password: string;
 }
 
-export default function Login() {
+function Login() {
+  const [login, setLogin] = useState(false);
   const { signIn, signUp } = useAuth();
 
   const {
@@ -20,34 +21,20 @@ export default function Login() {
     formState: { errors },
   } = useForm<Inputs>();
 
-  const onSubmit: SubmitHandler<Inputs> = async (data, event) => {
-    const submitter = (event?.nativeEvent as SubmitEvent)?.submitter as HTMLButtonElement | undefined;
-    const action = submitter?.value;
-    if (action === "login") {
-      await signIn(data.email, data.password);
+  const onSubmit: SubmitHandler<Inputs> = async ({ email, password }) => {
+    if (login) {
+      await signIn(email, password);
     } else {
-      await signUp(data.email, data.password);
+      await signUp(email, password);
     }
   };
 
   return (
-    <div
-      className="relative 
-  flex 
-  h-screen
-  w-screen
-  flex-col
-  bg-black/75
-  md:items-center
-  md:justify-center
-  md:bg-transparent
-  "
-    >
+    <div className="relative flex h-screen w-screen flex-col bg-black md:items-center md:justify-center md:bg-transparent">
       <Head>
-        <title>Login - Netflix-Clone</title>
+        <title>Netflix</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <Image
         src="https://rb.gy/p2hphi"
         layout="fill"
@@ -65,34 +52,17 @@ export default function Login() {
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="relative
-    mt-24
-    space-y-8
-    rounded
-     bg-black/75
-    py-10
-    px-6
-    md:mt-0
-    md:max-w-md
-    md:px-14
-    "
+        className="relative mt-24 space-y-8 rounded bg-black/75 py-10 px-6 md:mt-0 md:max-w-md md:px-14"
       >
-        <h1
-          className="text-4xl
-      font-semibold
-      "
-        >
-          Sign In
-        </h1>
+        <h1 className="text-4xl font-semibold">Sign In</h1>
         <div className="space-y-4">
           <label className="inline-block w-full">
             <input
-              {...register("email", { required: true })}
               type="email"
               placeholder="Email"
               className="input"
+              {...register("email", { required: true })}
             />
-
             {errors.email && (
               <p className="p-1 text-[13px] font-light  text-orange-500">
                 Please enter a valid email.
@@ -101,12 +71,11 @@ export default function Login() {
           </label>
           <label className="inline-block w-full">
             <input
-              {...register("password", { required: true })}
               type="password"
               placeholder="Password"
               className="input"
+              {...register("password", { required: true })}
             />
-
             {errors.password && (
               <p className="p-1 text-[13px] font-light  text-orange-500">
                 Your password must contain between 4 and 60 characters.
@@ -114,36 +83,35 @@ export default function Login() {
             )}
           </label>
         </div>
+
         <button
-          className="w-full 
-      rounded
-      bg-[#e50914]
-      py-3 
-      font-semibold
-      cursor-pointer
-      "
-          type="submit"
-          name="action"
-          value="login"
+          className="w-full rounded
+           bg-[#e50914]
+            py-3 
+            font-semibold
+            cursor-pointer
+            "
+          onClick={() => setLogin(true)}
         >
           Sign In
         </button>
 
         <div className="text-[gray]">
-          New to Netflix? {"   "}
+          New to Netflix?{" "}
           <button
-            className="text-white
-          hover:underline
-          cursor-pointer
-        "
             type="submit"
-            name="action"
-            value="signup"
+            className="text-white 
+            hover:underline
+            cursor-pointer
+            "
+            onClick={() => setLogin(false)}
           >
-            Sign Up Now
+            Sign up now
           </button>
         </div>
       </form>
     </div>
   );
 }
+
+export default Login;
